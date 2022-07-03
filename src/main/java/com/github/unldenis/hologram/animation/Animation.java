@@ -19,7 +19,7 @@
 
 package com.github.unldenis.hologram.animation;
 
-import org.bukkit.*;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 

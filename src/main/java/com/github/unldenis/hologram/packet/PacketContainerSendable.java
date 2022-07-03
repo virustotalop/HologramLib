@@ -19,12 +19,13 @@
 
 package com.github.unldenis.hologram.packet;
 
-import com.comphenix.protocol.*;
-import com.comphenix.protocol.events.*;
-import org.bukkit.entity.*;
-import org.jetbrains.annotations.*;
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.events.PacketContainer;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.*;
+import java.lang.reflect.InvocationTargetException;
 
 public class PacketContainerSendable extends PacketContainer {
 

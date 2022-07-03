@@ -40,7 +40,7 @@ public class Placeholders {
     @NotNull
     public String parse(@NotNull String line, @NotNull Player player) {
         String c = line;
-        for(Map.Entry<String, Function<Player, String>> entry: placeholders.entrySet()) {
+        for (Map.Entry<String, Function<Player, String>> entry : placeholders.entrySet()) {
             c = c.replaceAll(entry.getKey(), entry.getValue().apply(player));
         }
         return c;

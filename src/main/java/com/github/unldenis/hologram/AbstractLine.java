@@ -19,16 +19,20 @@
 
 package com.github.unldenis.hologram;
 
-import com.github.unldenis.hologram.animation.*;
-import com.github.unldenis.hologram.packet.*;
-import org.apache.commons.lang.*;
+import com.github.unldenis.hologram.animation.Animation;
+import com.github.unldenis.hologram.packet.PacketContainerSendable;
+import com.github.unldenis.hologram.packet.PacketsFactory;
+import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Unmodifiable;
 
-import java.util.*;
+import java.util.Objects;
+import java.util.Optional;
 
 public abstract class AbstractLine<T> {
     protected final Hologram hologram;
@@ -62,6 +66,7 @@ public abstract class AbstractLine<T> {
 
     /**
      * Method used to teleport a certain line
+     *
      * @param player player to teleport it to
      * @since 1.2-SNAPSHOT
      */
@@ -98,9 +103,9 @@ public abstract class AbstractLine<T> {
 
         this.animation = Optional.of(animation);
 
-        Runnable taskR = ()-> hologram.seeingPlayers.forEach(player -> animation.nextFrame(player, entityID, location));
+        Runnable taskR = () -> hologram.seeingPlayers.forEach(player -> animation.nextFrame(player, entityID, location));
         BukkitTask task;
-        if(animation.async()) {
+        if (animation.async()) {
             task = Bukkit.getScheduler().runTaskTimerAsynchronously(hologram.getPlugin(), taskR, animation.delay(), animation.delay());
         } else {
             task = Bukkit.getScheduler().runTaskTimer(hologram.getPlugin(), taskR, animation.delay(), animation.delay());
@@ -114,7 +119,7 @@ public abstract class AbstractLine<T> {
     }
 
     public void removeAnimation() {
-        if(taskID != -1) {
+        if (taskID != -1) {
             Bukkit.getScheduler().cancelTask(taskID);
             taskID = -1;
         }

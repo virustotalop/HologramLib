@@ -19,11 +19,14 @@
 
 package com.github.unldenis.hologram.line;
 
-import com.github.unldenis.hologram.*;
-import com.github.unldenis.hologram.packet.*;
+import com.github.unldenis.hologram.AbstractLine;
+import com.github.unldenis.hologram.Hologram;
+import com.github.unldenis.hologram.packet.PacketContainerSendable;
+import com.github.unldenis.hologram.packet.PacketsFactory;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Unmodifiable;
 
 public class ItemLine extends AbstractLine<ItemStack> {
 

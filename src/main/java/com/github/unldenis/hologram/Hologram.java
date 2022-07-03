@@ -22,14 +22,22 @@ package com.github.unldenis.hologram;
 import com.github.unldenis.hologram.line.ItemLine;
 import com.github.unldenis.hologram.placeholder.Placeholders;
 import org.apache.commons.lang.Validate;
-import org.bukkit.*;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 
-import java.util.*;
-import java.util.concurrent.*;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.function.Function;
 
 public class Hologram {
@@ -43,10 +51,10 @@ public class Hologram {
     private final Placeholders placeholders;
 
     /**
-     * @param plugin The org.bukkit.Plugin
-     * @param location The location of the hologram
+     * @param plugin       The org.bukkit.Plugin
+     * @param location     The location of the hologram
      * @param placeholders Reference passage of placeholders
-     * @param l Inverted array of hologram lines
+     * @param l            Inverted array of hologram lines
      * @deprecated Deprecated because you have to use the Builder of the class.
      */
     @Deprecated
@@ -63,18 +71,18 @@ public class Hologram {
 
         LinkedList<AbstractLine<?>> tempReversed = new LinkedList<>();
         Location cloned = this.location.clone().subtract(0, 0.28, 0);
-        for(int j=0; j< l.length; j++) {
+        for (int j = 0; j < l.length; j++) {
             Object[] line = l[j];
             double up = 0.28D;
-            if(j>0 && l[j-1].length == 1 /* ItemStack */) {
+            if (j > 0 && l[j - 1].length == 1 /* ItemStack */) {
                 up = 0.0D;
             }
             Object val = line[0];
-            if(val instanceof String) {
+            if (val instanceof String) {
                 TextLine tempLine = new TextLine(this, (String) val, (boolean) line[1]);
                 tempLine.setLocation(cloned.add(0.0, up, 0).clone());
                 tempReversed.addFirst(tempLine);
-            }else if (val instanceof ItemStack) {
+            } else if (val instanceof ItemStack) {
                 ItemLine tempLine = new ItemLine(this, (ItemStack) val);
                 tempLine.setLocation(cloned.add(0.0, 0.60D, 0).clone());
                 tempReversed.addFirst(tempLine);
@@ -86,6 +94,7 @@ public class Hologram {
     /**
      * Method used to teleport the hologram.
      * Note that this method runs on the main-thread.
+     *
      * @param to location to teleport it
      * @since 1.2-SNAPSHOT
      */
@@ -99,11 +108,11 @@ public class Hologram {
         // Obtain the Y position of the first line and then calculate the distance to all lines to maintain this distance
         double baseY = firstLine.getLocation().getY();
         // Get position Y where to teleport the first line
-        double destY = (this.location.getY()-0.28D) + (firstLine instanceof TextLine ? 0.28D : 0.60D);
+        double destY = (this.location.getY() - 0.28D) + (firstLine instanceof TextLine ? 0.28D : 0.60D);
         // Teleport the first line
         this.teleportLine(destY, firstLine);
         AbstractLine<?> tempLine;
-        for(int j=1; j<this.lines.size(); j++) {
+        for (int j = 1; j < this.lines.size(); j++) {
             tempLine = this.lines.get(j);
             /*
             Teleport from the second line onwards.
@@ -114,8 +123,8 @@ public class Hologram {
     }
 
     /**
-        Private method of teleporting a certain line.
-        Note that the position of this class must already have changed.
+     * Private method of teleporting a certain line.
+     * Note that the position of this class must already have changed.
      */
     private void teleportLine(double destY, AbstractLine<?> tempLine) {
         Location dest = this.location.clone();
@@ -126,13 +135,13 @@ public class Hologram {
 
     protected void show(@NotNull Player player) {
         this.seeingPlayers.add(player);
-        for(AbstractLine<?> line: this.lines) {
+        for (AbstractLine<?> line : this.lines) {
             line.show(player);
         }
     }
 
     protected void hide(@NotNull Player player) {
-        for(AbstractLine<?> line: this.lines) {
+        for (AbstractLine<?> line : this.lines) {
             line.hide(player);
         }
         this.seeingPlayers.remove(player);
@@ -215,14 +224,14 @@ public class Hologram {
         @NotNull
         public Builder addLine(@NotNull String line, boolean clickable) {
             Validate.notNull(line, "Line cannot be null");
-            this.lines.addFirst(new Object[]{ line, clickable});
+            this.lines.addFirst(new Object[]{line, clickable});
             return this;
         }
 
         @NotNull
         public Builder addLine(@NotNull ItemStack item) {
             Validate.notNull(item, "Item cannot be null");
-            this.lines.addFirst(new Object[]{ item });
+            this.lines.addFirst(new Object[]{item});
             return this;
         }
 
@@ -241,7 +250,7 @@ public class Hologram {
 
         @NotNull
         public Hologram build(@NotNull HologramPool pool) {
-            if(location==null || lines.isEmpty() || pool==null) {
+            if (location == null || lines.isEmpty() || pool == null) {
                 throw new IllegalArgumentException("No location given or not completed");
             }
             Hologram hologram = new Hologram(pool.getPlugin(), this.location, this.placeholders, this.lines.toArray(CACHE_ARR));

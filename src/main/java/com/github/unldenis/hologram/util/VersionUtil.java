@@ -19,8 +19,8 @@
 
 package com.github.unldenis.hologram.util;
 
-import org.bukkit.*;
-import org.jetbrains.annotations.*;
+import org.bukkit.Bukkit;
+import org.jetbrains.annotations.NotNull;
 
 public class VersionUtil {
 
@@ -35,7 +35,7 @@ public class VersionUtil {
         CLEAN_VERSION = VersionUtil.VersionEnum.valueOf(clean.toUpperCase());
     }
 
-    public static boolean isCompatible(@NotNull VersionEnum ve){
+    public static boolean isCompatible(@NotNull VersionEnum ve) {
         return VERSION.toLowerCase().contains(ve.toString().toLowerCase());
     }
 

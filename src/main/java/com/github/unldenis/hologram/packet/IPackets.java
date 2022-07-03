@@ -20,17 +20,29 @@
 package com.github.unldenis.hologram.packet;
 
 
-import com.comphenix.protocol.*;
-import com.comphenix.protocol.wrappers.*;
-import com.github.unldenis.hologram.placeholder.*;
-import com.github.unldenis.hologram.util.*;
-import org.bukkit.*;
-import org.bukkit.entity.*;
-import org.bukkit.inventory.*;
-import org.bukkit.plugin.*;
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.wrappers.EnumWrappers;
+import com.comphenix.protocol.wrappers.Pair;
+import com.comphenix.protocol.wrappers.WrappedChatComponent;
+import com.comphenix.protocol.wrappers.WrappedDataWatcher;
+import com.github.unldenis.hologram.placeholder.Placeholders;
+import com.github.unldenis.hologram.util.BukkitFuture;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 
-import java.util.*;
-import java.util.concurrent.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 
 public interface IPackets {
@@ -75,7 +87,7 @@ public interface IPackets {
             packet.getIntegers().write(2, (int) (location.getX() * 32));
             packet.getIntegers().write(3, (int) (location.getY() * 32));
             packet.getIntegers().write(4, (int) (location.getZ() * 32));
-            if(defaultDataWatcher == null) {
+            if (defaultDataWatcher == null) {
                 loadDefaultWatcher(plugin).join();
             }
             packet.getDataWatcherModifier().write(0, PacketsV1_8.defaultDataWatcher);
@@ -87,7 +99,7 @@ public interface IPackets {
         @Override
         public PacketContainerSendable destroyPacket(int entityID) {
             PacketContainerSendable packet = newPacket(PacketType.Play.Server.ENTITY_DESTROY);
-            packet.getIntegerArrays().write(0, new int[] { entityID });
+            packet.getIntegerArrays().write(0, new int[]{entityID});
             return packet;
         }
 
@@ -106,10 +118,10 @@ public interface IPackets {
             PacketContainerSendable packet = newPacket(PacketType.Play.Server.ENTITY_METADATA);
             packet.getIntegers().write(0, entityID);
             WrappedDataWatcher watcher = new WrappedDataWatcher();
-            if(setInvisible) {
+            if (setInvisible) {
                 watcher.setObject(0, (byte) 0x20);
             }
-            if(placeholders != null) {
+            if (placeholders != null) {
                 watcher.setObject(2, placeholders.parse(nameTag, player));
                 watcher.setObject(3, (byte) 1);
             }
@@ -124,7 +136,7 @@ public interface IPackets {
             packet.getIntegers().write(1, fixCoordinate(location.getX()));
             packet.getIntegers().write(2, fixCoordinate(location.getY()));
             packet.getIntegers().write(3, fixCoordinate(location.getZ()));
-            packet.getBytes().write(0,  this.getCompressAngle(location.getYaw()));
+            packet.getBytes().write(0, this.getCompressAngle(location.getYaw()));
             packet.getBytes().write(1, this.getCompressAngle(location.getPitch()));
             packet.getBooleans().write(0, false);
             return packet;
@@ -201,11 +213,11 @@ public interface IPackets {
             PacketContainerSendable packet = newPacket(PacketType.Play.Server.ENTITY_METADATA);
             packet.getIntegers().write(0, entityID);
             WrappedDataWatcher watcher = new WrappedDataWatcher();
-            if(setInvisible) {
+            if (setInvisible) {
                 WrappedDataWatcher.WrappedDataWatcherObject visible = new WrappedDataWatcher.WrappedDataWatcherObject(0, WrappedDataWatcher.Registry.get(Byte.class));
                 watcher.setObject(visible, (byte) 0x20);
             }
-            if(placeholders != null) {
+            if (placeholders != null) {
                 Optional<?> opt = Optional
                         .of(WrappedChatComponent
                                 .fromChatMessage(placeholders.parse(nameTag, player))[0].getHandle());
@@ -213,7 +225,7 @@ public interface IPackets {
 
                 WrappedDataWatcher.WrappedDataWatcherObject nameVisible = new WrappedDataWatcher.WrappedDataWatcherObject(3, WrappedDataWatcher.Registry.get(Boolean.class));
                 watcher.setObject(nameVisible, true);
-            };
+            }
 
             packet.getWatchableCollectionModifier().write(0, watcher.getWatchableObjects());
             return packet;
@@ -225,8 +237,8 @@ public interface IPackets {
             packet.getIntegers().write(0, entityID);
             packet.getDoubles().write(0, location.getX());
             packet.getDoubles().write(1, location.getY());
-            packet.getDoubles() .write(2, location.getZ());
-            packet.getBytes().write(0,  this.getCompressAngle(location.getYaw()));
+            packet.getDoubles().write(2, location.getZ());
+            packet.getBytes().write(0, this.getCompressAngle(location.getYaw()));
             packet.getBytes().write(1, this.getCompressAngle(location.getPitch()));
             packet.getBooleans().write(0, false);
             return packet;

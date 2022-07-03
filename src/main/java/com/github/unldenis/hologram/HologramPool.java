@@ -21,17 +21,20 @@ package com.github.unldenis.hologram;
 
 import com.google.common.collect.ImmutableList;
 import org.apache.commons.lang.Validate;
-import org.bukkit.*;
-import org.bukkit.entity.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Random;
 import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.concurrent.atomic.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class HologramPool implements Listener {
@@ -47,12 +50,12 @@ public class HologramPool implements Listener {
 
     public HologramPool(@NotNull Plugin plugin, double spawnDistance, float minHitDistance, float maxHitDistance) {
         Validate.notNull(plugin, "Plugin cannot be null");
-        if(minHitDistance < 0)
+        if (minHitDistance < 0)
             throw new IllegalArgumentException("minHitDistance must be positive");
-        if(maxHitDistance > 120)
+        if (maxHitDistance > 120)
             throw new IllegalArgumentException("maxHitDistance cannot be greater than 120");
         this.plugin = plugin;
-        this.spawnDistance = spawnDistance*spawnDistance;
+        this.spawnDistance = spawnDistance * spawnDistance;
         this.minHitDistance = minHitDistance;
         this.maxHitDistance = maxHitDistance;
 
@@ -65,19 +68,19 @@ public class HologramPool implements Listener {
     public void handleRespawn(PlayerRespawnEvent event) {
         Player player = event.getPlayer();
         holograms.stream()
-            .filter(h -> h.isShownFor(player))
-            .forEach(h -> h.hide(player));
+                .filter(h -> h.isShownFor(player))
+                .forEach(h -> h.hide(player));
     }
 
     @EventHandler
     public void handleQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         holograms.stream()
-            .filter(h -> h.isShownFor(player) || h.isExcluded(player))
-            .forEach(h -> {
-                h.removeSeeingPlayer(player);
-                h.removeExcludedPlayer(player);
-            });
+                .filter(h -> h.isShownFor(player) || h.isExcluded(player))
+                .forEach(h -> {
+                    h.removeSeeingPlayer(player);
+                    h.removeExcludedPlayer(player);
+                });
     }
 
     protected Plugin getPlugin() {
@@ -86,7 +89,6 @@ public class HologramPool implements Listener {
 
     /**
      * Adds the given {@code hologram} to the list of handled Holograms of this pool.
-     *
      */
     protected void takeCareOf(@NotNull Hologram hologram) {
         this.holograms.add(hologram);
@@ -104,7 +106,7 @@ public class HologramPool implements Listener {
                     boolean isShown = hologram.isShownFor(player);
 
                     if (!holoLoc.getWorld().equals(playerLoc.getWorld())) {
-                        if(isShown) {
+                        if (isShown) {
                             hologram.hide(player);
                         }
                         continue;
@@ -132,7 +134,7 @@ public class HologramPool implements Listener {
      */
     public void remove(@NotNull Hologram hologram) {
         Validate.notNull(hologram, "Hologram to remove cannot be null");
-        if(this.holograms.contains(hologram)) {
+        if (this.holograms.contains(hologram)) {
             this.holograms.remove(hologram);
             hologram.getSeeingPlayers()
                     .forEach(hologram::hide);

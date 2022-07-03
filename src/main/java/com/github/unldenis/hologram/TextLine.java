@@ -19,11 +19,11 @@
 
 package com.github.unldenis.hologram;
 
-import com.github.unldenis.hologram.packet.*;
-import com.github.unldenis.hologram.util.*;
-import org.bukkit.*;
+import com.github.unldenis.hologram.packet.PacketsFactory;
+import com.github.unldenis.hologram.util.AABB;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.NotNull;
 
 public class TextLine extends AbstractLine<String> {
 
@@ -58,6 +58,7 @@ public class TextLine extends AbstractLine<String> {
 
     /**
      * Parse the possible placeholder for the player.
+     *
      * @param player - the target player
      * @return the parsed strings
      */
@@ -69,14 +70,14 @@ public class TextLine extends AbstractLine<String> {
     @Override
     protected void setLocation(@NotNull Location location) {
         super.setLocation(location);
-        if(clickable) {
+        if (clickable) {
             double chars = obj.length();
             double size = 0.105;
             double dist = size * (chars / 2d);
 
             hitbox = new AABB(
-                    new AABB.Vec3D(-dist, - 0.039, -dist),
-                    new AABB.Vec3D(dist, + 0.039, dist));
+                    new AABB.Vec3D(-dist, -0.039, -dist),
+                    new AABB.Vec3D(dist, +0.039, dist));
             hitbox.translate(AABB.Vec3D.fromLocation(location.clone().add(0, 2.425, 0)));
         }
     }

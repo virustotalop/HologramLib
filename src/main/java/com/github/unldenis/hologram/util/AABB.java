@@ -19,10 +19,10 @@
 
 package com.github.unldenis.hologram.util;
 
-import org.bukkit.*;
+import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
-import java.util.*;
+import java.util.Objects;
 
 /**
  * Represents an axix-aligned bounding box.
@@ -37,15 +37,22 @@ public class AABB {
          */
         public static final Vec3D UNIT_MAX = new Vec3D(1, 1, 1);
 
-        /** X coordinate. */
+        /**
+         * X coordinate.
+         */
         public final double x;
-        /** Y coordinate. */
+        /**
+         * Y coordinate.
+         */
         public final double y;
-        /** Z coordinate. */
+        /**
+         * Z coordinate.
+         */
         public final double z;
 
         /**
          * Creates a new vector with the given coordinates.
+         *
          * @param x the x
          * @param y the y
          * @param z the z
@@ -58,6 +65,7 @@ public class AABB {
 
         /**
          * Creates a new vector with the coordinates of the given vector.
+         *
          * @param v vector to copy.
          */
         public Vec3D(Vec3D v) {
@@ -68,6 +76,7 @@ public class AABB {
 
         /**
          * Construct a vector from a Bukkit location.
+         *
          * @param loc - the Bukkit location.
          */
         public static Vec3D fromLocation(Location loc) {
@@ -76,6 +85,7 @@ public class AABB {
 
         /**
          * Construct a copy of our immutable vector from Bukkit's mutable vector.
+         *
          * @param v - Bukkit vector.
          * @return A copy of the given vector.
          */
@@ -97,7 +107,6 @@ public class AABB {
          * Scales vector uniformly and returns result as new vector.
          *
          * @param s scale factor
-         *
          * @return new vector
          */
         public Vec3D scale(double s) {
@@ -106,6 +115,7 @@ public class AABB {
 
         /**
          * Normalizes the vector so that its magnitude = 1.
+         *
          * @return The normalized vector.
          */
         public Vec3D normalize() {
@@ -146,6 +156,7 @@ public class AABB {
 
         /**
          * Construct a 3D ray from a location.
+         *
          * @param loc - the Bukkit location.
          */
         public Ray3D(Location loc) {
@@ -179,6 +190,7 @@ public class AABB {
 
     /**
      * Create a new com.github.unldenis.hologram.util.AABB from a given block.
+     *
      * @param block - the block.
      */
     public AABB(Location block) {
@@ -187,6 +199,7 @@ public class AABB {
 
     /**
      * Translate this AABB to a given point.
+     *
      * @param vec - the point.
      */
     public void translate(Vec3D vec) {
@@ -207,7 +220,7 @@ public class AABB {
      *
      * @param ray incident ray
      * @return intersection point on the bounding box (only the first is
-     *         returned) or null if no intersection
+     * returned) or null if no intersection
      */
     public Vec3D intersectsRay(Ray3D ray, float minDist, float maxDist) {
         Vec3D invDir = new Vec3D(1f / ray.dir.x, 1f / ray.dir.y, 1f / ray.dir.z);
