@@ -84,31 +84,6 @@ public class HologramPool implements Listener {
             });
     }
 
-    @EventHandler
-    public void handleInteract(PlayerInteractEvent e) {
-        final Player player = e.getPlayer();
-        if(e.getAction() != Action.LEFT_CLICK_AIR)
-            return;
-FST:    for(Hologram hologram: holograms) {
-            if(hologram.isShownFor(player)) {
-                for(AbstractLine<?> line: hologram.lines) {
-                    if(line instanceof TextLine) {
-                        TextLine tL = (TextLine) line;
-                        if(tL.isClickable() && tL.hitbox != null) {
-                            AABB.Vec3D intersects = tL.hitbox.intersectsRay(new AABB.Ray3D(player.getEyeLocation()), minHitDistance, maxHitDistance);
-                            if(intersects != null) {
-                                Bukkit.getScheduler().runTask(
-                                        plugin,
-                                        ()->Bukkit.getPluginManager().callEvent(new PlayerHologramInteractEvent(player, hologram, tL)));
-                                break FST;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     protected Plugin getPlugin() {
         return plugin;
     }
