@@ -1,47 +1,11 @@
+
+Forked version of [unledis' HologramLib](https://github.com/unldenis/Hologram-Lib). If you are looking to use a Hologram library use their library as this library will be stripped of most of it's features to be tailor made for private projects. If you are upstream or run an upstream fork feel free to use any changes that you wish to.
+
 # Hologram-Lib
-[![](https://jitpack.io/v/unldenis/Hologram-Lib.svg)](https://jitpack.io/#unldenis/Hologram-Lib) <br>
 Asynchronous, high-performance Minecraft Hologram library for 1.8-1.19 servers.
 ## Requirements
 This library can only be used on spigot servers higher or on version 1.8.8. The plugin <a href="https://www.spigotmc.org/resources/protocollib.1997/">ProtocolLib</a> is required on your server.
-## How to use
-Add the repository and dependency to your plugin:
-Maven
-```xml
-<repository>
-    <id>jitpack.io</id>
-    <url>https://jitpack.io</url>
-</repository>
 
-<dependency>
-    <groupId>com.github.unldenis</groupId>
-    <artifactId>Hologram-Lib</artifactId>
-    <version>master-SNAPSHOT</version>
-</dependency>
-```
-Gradle
-```gradle
-allprojects {
-    repositories {
-        maven { url 'https://jitpack.io' }
-    }
-}
-
-dependencies {
-    implementation 'com.github.unldenis:Hologram-Lib:master-SNAPSHOT'
-}
-```
-Add ProtocolLib as dependency to your plugin.yml. It could look like this:
-```yml
-name: Hub
-version: 1.0-SNAPSHOT
-api-version: "1.13"
-depend: [ProtocolLib]
-author: unldenis
-main: com.github.unldenis.server.hub.ServerHub
-```
-## Support
-The libraries that integrate Hologram-Lib
-- <a href="https://github.com/unldenis/NPC-Lib/tree/hologramlib-integration">unldenis/NPC-Lib</a>
 ## Example usage
 ```java
 public class ExampleHolograms implements Listener {
@@ -109,42 +73,5 @@ public class ExampleHolograms implements Listener {
         }
         .runTaskTimer(plugin, 30L, 30L);
     }
-
-    /**
-     * Doing something when a Hologram is shown for a certain player.
-     * @param event The event instance
-     */
-    @EventHandler
-    public void onHologramShow(PlayerHologramShowEvent event) {
-        Hologram holo = event.getHologram();
-        Player player = event.getPlayer();
-    }
-
-    /**
-     * Doing something when a Hologram is hidden for a certain player.
-     * @param event The event instance
-     */
-    @EventHandler
-    public void onHologramHide(PlayerHologramHideEvent event) {
-        Hologram holo = event.getHologram();
-        Player player = event.getPlayer();
-    }
-
-    /**
-     * Doing something when a Hologram is left-clicked by a certain player.
-     * @param e The event instance
-     */
-    @EventHandler
-    public void onHologramInteract(PlayerHologramInteractEvent e) {
-        Player player = e.getPlayer();
-        TextLine line = e.getLine();
-        player.sendMessage("Click at " + line.parse(player));
-    }
 }
 ```
-## Preview
-https://user-images.githubusercontent.com/80055679/147889286-6d4006a0-677b-4066-a285-08e79d3fad9e.mp4
-#### Placeholder Preview
-![2022-01-03_22 11 34](https://user-images.githubusercontent.com/80055679/147980899-fa7b8172-b0d8-4ab6-9eab-d33e9323fb63.png)
-#### Interact Preview
-![2022-06-12_18 39 23](https://user-images.githubusercontent.com/80055679/173243893-0f5568d4-c667-4311-b5ab-35d19ccc18e4.png)
